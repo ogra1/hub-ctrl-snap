@@ -1,0 +1,55 @@
+name: hub-ctrl
+base: core18
+version: '0.1'
+summary: Control USB power on a port by port basis on some USB hubs.
+description: |
+  Control USB power on a port by port basis on some USB hubs.
+
+  This only works on USB hubs that have the hardware necessary to
+  allow software controlled power switching. Most hubs DO NOT include
+  the hardware.
+
+  The following is a list of Hubs that are known to have the hardware
+  necessary to allow power switching.
+
+  - D-Link-DUB-H7-High-Speed-7-Por
+  - Elecom U2H-G4S
+  - Sanwa Supply USB-HUB14GPH
+  - Targus, Inc. PAUH212
+  - Hawking Technology UH214
+  - B&B Electronics UHR204
+  - Belkin F5U701
+  - Linksys USB2HUB4
+
+grade: stable
+confinement: strict
+
+apps:
+  hub-ctrl:
+    command: hub-ctrl
+    plugs:
+      - raw-usb
+      - hardware-observe
+  lsusb:
+    command: lsusb
+    plugs:
+      - raw-usb
+      - hardware-observe
+layout:
+  /var/lib/usbutils:
+    bind: $SNAP/var/lib/usbutils
+
+parts:
+  hub-ctrl:
+    source: https://github.com/codazoda/hub-ctrl.c.git
+    plugin: nil
+    override-build: |
+      gcc -o hub-ctrl hub-ctrl.c -lusb
+      mkdir $SNAPCRAFT_PART_INSTALL/bin
+      cp hub-ctrl $SNAPCRAFT_PART_INSTALL/bin/
+    build-packages:
+      - build-essential
+      - libusb-dev
+    stage-packages:
+      - libusb-0.1-4
+      - usbutils
