@@ -1,6 +1,6 @@
 name: hub-ctrl
 base: core18
-version: '0.1'
+version: '0.2'
 summary: Control USB power on a port by port basis on some USB hubs.
 description: |
   Control USB power on a port by port basis on some USB hubs.
